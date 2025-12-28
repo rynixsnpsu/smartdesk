@@ -1,0 +1,35 @@
+<%- include("partials/header", { title: "Admin Dashboard" }) %>
+<%- include("partials/navbar", { user }) %>
+
+<div class="max-w-6xl mx-auto mt-10">
+
+  <h2 class="text-3xl font-semibold mb-6">Admin Dashboard</h2>
+
+  <div class="card-ui mb-6">
+    <p><strong>Total Submissions:</strong> <%= totalSubmissions %></p>
+  </div>
+
+  <div class="card-ui">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Topic</th>
+          <th>Category</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% topTopics.forEach(t => { %>
+          <tr>
+            <td><%= t.topic %></td>
+            <td><span class="badge bg-secondary"><%= t.category %></span></td>
+            <td class="fw-bold text-danger"><%= t.votes %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<%- include("partials/footer") %>

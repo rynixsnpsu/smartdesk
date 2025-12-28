@@ -1,0 +1,35 @@
+{
+  "name": "smart-desk",
+  "version": "1.0.0",
+  "description": "AI-powered student feedback platform for Sapthagiri NPS University",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": [
+    "hackathon",
+    "student-feedback",
+    "ai",
+    "express",
+    "gemini"
+  ],
+  "author": "Smart Desk Team",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.2.1",
+    "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

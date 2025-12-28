@@ -1,0 +1,21 @@
+<%- include("partials/header", { title: "Student Dashboard" }) %>
+<%- include("partials/navbar", { user }) %>
+
+<div class="max-w-5xl mx-auto mt-10">
+
+  <h2 class="text-3xl font-semibold mb-6">Student Dashboard</h2>
+
+  <div class="card-ui">
+    <form method="POST" action="/student/feedback" class="space-y-4">
+      <input class="form-control" name="topic" placeholder="Topic" required />
+      <textarea class="form-control" name="description" rows="4" placeholder="Describe issue" required></textarea>
+
+      <button class="btn btn-success w-full">
+        Submit Feedback
+      </button>
+    </form>
+  </div>
+
+</div>
+
+<%- include("partials/footer") %>

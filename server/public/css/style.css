@@ -1,0 +1,18 @@
+body {
+  font-family: Arial;
+  background: #eef2f7;
+}
+
+.login-container {
+  width: 380px;
+  margin: 100px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+input, textarea, button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+}
