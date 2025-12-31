@@ -2,14 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-
 const connectDB = require("./data/db");
 const securityMiddleware = require("./middleware/security.middleware");
 const errorHandler = require("./middleware/error.middleware");
-
 const authRoutes = require("./routes/auth.routes");
 const studentRoutes = require("./routes/student.routes");
 const adminRoutes = require("./routes/admin.routes");
+const newsletterRoutes = require("./routes/newsletter.routes");
+
 
 const app = express();
 app.use((req, res, next) => {
@@ -30,11 +30,19 @@ app.set("views", path.join(__dirname, "views"));
 
 /* Routes */
 app.get("/", (req, res) => res.render("landing", { showNavbar: true }));
-app.get("/login", (req, res) => res.render("login", { showNavbar: false }));
+app.get("/login", (req, res) =>
+  res.render("login", {
+    layout: "layouts/main",
+    title: "Smart Desk",
+    showNavbar: false,
+  })
+);
 
 app.use(authRoutes);
 app.use(studentRoutes);
 app.use(adminRoutes);
+app.use(newsletterRoutes);
+
 
 /* Error handling */
 app.use(errorHandler);

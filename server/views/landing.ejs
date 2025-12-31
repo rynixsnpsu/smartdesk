@@ -1,20 +1,352 @@
-<%- include("partials/header", { title: "Smart Desk" }) %>
-<%- include("partials/navbar", { user: null }) %>
+<%- include('./partials/header') %> <%- include('./partials/navbar') %>
 
-<section class="text-center py-24">
-  <h1 class="text-5xl font-bold text-indigo-600 mb-6">
-    Smart Desk
-  </h1>
+    <div class="card card-body mx-3 mx-md-4 mt-n6 z-index-1 position-relative">
+      <div class="bullets d-none d-md-block">
+        <ul>
+          <li>
+            <a class="indicator" href="#stats" data-bs-toggle="tooltip" data-bs-placement="left"
+              title="Stats Section"></a>
+          </li>
+          <li>
+            <a class="indicator" href="#features" data-bs-toggle="tooltip" data-bs-placement="left"
+              title="Powerful Features"></a>
+          </li>
+          <li>
+            <a class="indicator" href="#feedback" data-bs-toggle="tooltip" data-bs-placement="left"
+              title="Leading Institutions"></a>
+          </li>
+          <li>
+            <a class="indicator" href="#join" data-bs-toggle="tooltip" data-bs-placement="left"
+              title="Join Our Community"></a>
+          </li>
+        </ul>
+      </div>
 
-  <p class="text-xl text-slate-600 max-w-3xl mx-auto">
-    AI-powered student feedback intelligence for universities.
-  </p>
-
-  <div class="mt-8">
-    <a href="/login" class="btn btn-primary btn-lg">
-      Access Dashboard
-    </a>
-  </div>
-</section>
-
-<%- include("partials/footer") %>
+      <section class="pt-3 pb-4" id="stats">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-11 z-index-2 border-radius-xl mx-auto py-3">
+              <div class="row">
+                <div class="col-md-6 col-lg-3 position-relative">
+                  <div class="p-3 text-center">
+                    <h1 class="text-gradient text-primary">
+                      <span id="stats1" countTo="10000">0</span>+
+                    </h1>
+                    <h5 class="mt-3">Feedback Analyzed</h5>
+                  </div>
+                  <hr class="vertical dark" />
+                </div>
+                <div class="col-md-6 col-lg-3 position-relative">
+                  <div class="p-3 text-center">
+                    <h1 class="text-gradient text-primary">
+                      <span id="stats2" countTo="98000">0</span>+
+                    </h1>
+                    <h5 class="mt-3">Insight Generation</h5>
+                  </div>
+                  <hr class="vertical dark" />
+                </div>
+                <div class="col-md-6 col-lg-3 position-relative">
+                  <div class="p-3 text-center">
+                    <h1 class="text-gradient text-primary">
+                      <span id="stats3" countTo="75">0</span>+
+                    </h1>
+                    <h5 class="mt-3">% Report Automation</h5>
+                  </div>
+                  <hr class="vertical dark" />
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="p-3 text-center">
+                    <h1 class="text-gradient text-primary">4.9/5</h1>
+                    <h5 class="mt-3">Sentiment Clarity</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="mt-5 pb-4" id="features">
+        <div class="container">
+          <div class="row mb-5">
+            <div class="col-lg-7 mx-auto text-center">
+              <h2 class="mb-3">Powerful Features</h2>
+              <p>
+                Everything you need to transform feedback into strategic advantage
+              </p>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    🧠
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Getting Started</h5>
+                    <p>
+                      Advanced machine learning algorithms analyze student feedback
+                      for actionable insights.
+                    </p>
+                    <a href="/login" class="text-dark">
+                      Let's start
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 px-lg-1 mt-lg-0 mt-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4 h-100">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    ⚡️
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Automated Reports</h5>
+                    <p>Generate comprehensive reports with a single click.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-lg-0 mt-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    👥
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Collaborative Tools</h5>
+                    <p>Facilitate teamwork and collaboration across departments.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p></p>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    🔎
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Deep Sentiment Analysis</h5>
+                    <p>
+                      Analyze sentiment trends and identify areas for improvement.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 px-lg-1 mt-lg-0 mt-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4 h-100">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    📊
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Real-Time Dashboards</h5>
+                    <p>
+                      Live, interactive dashboards provide up-to-date feedback
+                      intelligence.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-lg-0 mt-4">
+                <div class="info-horizontal bg-gray-100 border-radius-xl d-block p-4">
+                  <div
+                    class="relative w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
+                    🔗
+                  </div>
+                  <div class="mt-3 mt-md-0">
+                    <h5>Seamless Integration</h5>
+                    <p>Easily integrates with existing university systems.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="feedback">
+        <div class="container mt-8">
+          <div class="row mb-5">
+            <div class="col-lg-6 mx-auto text-center">
+              <h5 class="text-primary fw-bold text-uppercase text-lg">
+                Trusted by
+              </h5>
+              <h2>Leading Institutions</h2>
+              <p class="text-secondary lead font-weight-normal pe-3">
+                Hear from university leaders who have transformed their feedback processes
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-5 d-flex justify-content-center flex-column ms-auto">
+              <div id="carouselTestimonials" class="carousel slide" data-bs-ride="carousel">
+                <ol class="justify-content-start ps-0">
+                  <button class="btn bg-white border rounded-circle py-2 px-3" data-bs-target="#carouselTestimonials"
+                    data-bs-slide-to="0">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button class="btn bg-white border rounded-circle py-2 px-3" data-bs-target="#carouselTestimonials"
+                    data-bs-slide-to="1">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <h6 class="opacity-8 pe-5">
+                      "Smart Desk has transformed how we interpret and act on student feedback. The platform's insights
+                      are invaluable."
+                    </h6>
+                    <svg width="101" height="18" viewBox="0 0 101 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g clip-path="url(#clip0_31_951)">
+                        <path
+                          d="M16.7143 8.07031C16.7143 8.21763 16.6272 8.37835 16.4531 8.55246L12.8069 12.1083L13.6708 17.1306C13.6775 17.1775 13.6808 17.2444 13.6808 17.3315C13.6808 17.4721 13.644 17.5893 13.5703 17.683C13.5033 17.7835 13.4029 17.8337 13.269 17.8337C13.1417 17.8337 13.0078 17.7935 12.8672 17.7132L8.35714 15.3426L3.8471 17.7132C3.69978 17.7935 3.56585 17.8337 3.44531 17.8337C3.30469 17.8337 3.19754 17.7835 3.12388 17.683C3.05692 17.5893 3.02344 17.4721 3.02344 17.3315C3.02344 17.2913 3.03013 17.2243 3.04353 17.1306L3.90737 12.1083L0.251116 8.55246C0.0837054 8.37165 0 8.21094 0 8.07031C0 7.82254 0.1875 7.66853 0.5625 7.60826L5.60491 6.875L7.86496 2.30469C7.99219 2.03013 8.15625 1.89286 8.35714 1.89286C8.55804 1.89286 8.7221 2.03013 8.84933 2.30469L11.1094 6.875L16.1518 7.60826C16.5268 7.66853 16.7143 7.82254 16.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M37.7143 8.07031C37.7143 8.21763 37.6272 8.37835 37.4531 8.55246L33.8069 12.1083L34.6708 17.1306C34.6775 17.1775 34.6808 17.2444 34.6808 17.3315C34.6808 17.4721 34.644 17.5893 34.5703 17.683C34.5033 17.7835 34.4029 17.8337 34.269 17.8337C34.1417 17.8337 34.0078 17.7935 33.8672 17.7132L29.3571 15.3426L24.8471 17.7132C24.6998 17.7935 24.5658 17.8337 24.4453 17.8337C24.3047 17.8337 24.1975 17.7835 24.1239 17.683C24.0569 17.5893 24.0234 17.4721 24.0234 17.3315C24.0234 17.2913 24.0301 17.2243 24.0435 17.1306L24.9074 12.1083L21.2511 8.55246C21.0837 8.37165 21 8.21094 21 8.07031C21 7.82254 21.1875 7.66853 21.5625 7.60826L26.6049 6.875L28.865 2.30469C28.9922 2.03013 29.1563 1.89286 29.3571 1.89286C29.558 1.89286 29.7221 2.03013 29.8493 2.30469L32.1094 6.875L37.1518 7.60826C37.5268 7.66853 37.7143 7.82254 37.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M58.7143 8.07031C58.7143 8.21763 58.6272 8.37835 58.4531 8.55246L54.8069 12.1083L55.6708 17.1306C55.6775 17.1775 55.6808 17.2444 55.6808 17.3315C55.6808 17.4721 55.644 17.5893 55.5703 17.683C55.5033 17.7835 55.4029 17.8337 55.269 17.8337C55.1417 17.8337 55.0078 17.7935 54.8672 17.7132L50.3571 15.3426L45.8471 17.7132C45.6998 17.7935 45.5658 17.8337 45.4453 17.8337C45.3047 17.8337 45.1975 17.7835 45.1239 17.683C45.0569 17.5893 45.0234 17.4721 45.0234 17.3315C45.0234 17.2913 45.0301 17.2243 45.0435 17.1306L45.9074 12.1083L42.2511 8.55246C42.0837 8.37165 42 8.21094 42 8.07031C42 7.82254 42.1875 7.66853 42.5625 7.60826L47.6049 6.875L49.865 2.30469C49.9922 2.03013 50.1563 1.89286 50.3571 1.89286C50.558 1.89286 50.7221 2.03013 50.8493 2.30469L53.1094 6.875L58.1518 7.60826C58.5268 7.66853 58.7143 7.82254 58.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M79.7143 8.07031C79.7143 8.21763 79.6272 8.37835 79.4531 8.55246L75.8069 12.1083L76.6708 17.1306C76.6775 17.1775 76.6808 17.2444 76.6808 17.3315C76.6808 17.4721 76.644 17.5893 76.5703 17.683C76.5033 17.7835 76.4029 17.8337 76.269 17.8337C76.1417 17.8337 76.0078 17.7935 75.8672 17.7132L71.3571 15.3426L66.8471 17.7132C66.6998 17.7935 66.5658 17.8337 66.4453 17.8337C66.3047 17.8337 66.1975 17.7835 66.1239 17.683C66.0569 17.5893 66.0234 17.4721 66.0234 17.3315C66.0234 17.2913 66.0301 17.2243 66.0435 17.1306L66.9074 12.1083L63.2511 8.55246C63.0837 8.37165 63 8.21094 63 8.07031C63 7.82254 63.1875 7.66853 63.5625 7.60826L68.6049 6.875L70.865 2.30469C70.9922 2.03013 71.1563 1.89286 71.3571 1.89286C71.558 1.89286 71.7221 2.03013 71.8493 2.30469L74.1094 6.875L79.1518 7.60826C79.5268 7.66853 79.7143 7.82254 79.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M100.714 8.07031C100.714 8.21763 100.627 8.37835 100.453 8.55246L96.8069 12.1083L97.6708 17.1306C97.6775 17.1775 97.6808 17.2444 97.6808 17.3315C97.6808 17.4721 97.644 17.5893 97.5703 17.683C97.5033 17.7835 97.4029 17.8337 97.269 17.8337C97.1417 17.8337 97.0078 17.7935 96.8672 17.7132L92.3571 15.3426L87.8471 17.7132C87.6998 17.7935 87.5658 17.8337 87.4453 17.8337C87.3047 17.8337 87.1975 17.7835 87.1239 17.683C87.0569 17.5893 87.0234 17.4721 87.0234 17.3315C87.0234 17.2913 87.0301 17.2243 87.0435 17.1306L87.9074 12.1083L84.2511 8.55246C84.0837 8.37165 84 8.21094 84 8.07031C84 7.82254 84.1875 7.66853 84.5625 7.60826L89.6049 6.875L91.865 2.30469C91.9922 2.03013 92.1563 1.89286 92.3571 1.89286C92.558 1.89286 92.7221 2.03013 92.8493 2.30469L95.1094 6.875L100.152 7.60826C100.527 7.66853 100.714 7.82254 100.714 8.07031Z"
+                          fill="#344767" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_31_951">
+                          <rect width="101" height="18" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    <div class="author mt-4">
+                      <img src="../assets/img/ivana-square.jpg" alt="..." class="avatar rounded-circle shadow-lg" />
+                      <div class="ms-2">
+                        <span>Dr. Emily Chen</span>
+                        <div class="stats">
+                          <small class="opacity-6">Dean of Students</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <h6 class="opacity-8 pe-5">
+                      "Smart Desk's real-time dashboards have made our feedback process seamless and efficient."
+                    </h6>
+                    <svg width="101" height="18" viewBox="0 0 101 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g clip-path="url(#clip0_31_951)">
+                        <path
+                          d="M16.7143 8.07031C16.7143 8.21763 16.6272 8.37835 16.4531 8.55246L12.8069 12.1083L13.6708 17.1306C13.6775 17.1775 13.6808 17.2444 13.6808 17.3315C13.6808 17.4721 13.644 17.5893 13.5703 17.683C13.5033 17.7835 13.4029 17.8337 13.269 17.8337C13.1417 17.8337 13.0078 17.7935 12.8672 17.7132L8.35714 15.3426L3.8471 17.7132C3.69978 17.7935 3.56585 17.8337 3.44531 17.8337C3.30469 17.8337 3.19754 17.7835 3.12388 17.683C3.05692 17.5893 3.02344 17.4721 3.02344 17.3315C3.02344 17.2913 3.03013 17.2243 3.04353 17.1306L3.90737 12.1083L0.251116 8.55246C0.0837054 8.37165 0 8.21094 0 8.07031C0 7.82254 0.1875 7.66853 0.5625 7.60826L5.60491 6.875L7.86496 2.30469C7.99219 2.03013 8.15625 1.89286 8.35714 1.89286C8.55804 1.89286 8.7221 2.03013 8.84933 2.30469L11.1094 6.875L16.1518 7.60826C16.5268 7.66853 16.7143 7.82254 16.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M37.7143 8.07031C37.7143 8.21763 37.6272 8.37835 37.4531 8.55246L33.8069 12.1083L34.6708 17.1306C34.6775 17.1775 34.6808 17.2444 34.6808 17.3315C34.6808 17.4721 34.644 17.5893 34.5703 17.683C34.5033 17.7835 34.4029 17.8337 34.269 17.8337C34.1417 17.8337 34.0078 17.7935 33.8672 17.7132L29.3571 15.3426L24.8471 17.7132C24.6998 17.7935 24.5658 17.8337 24.4453 17.8337C24.3047 17.8337 24.1975 17.7835 24.1239 17.683C24.0569 17.5893 24.0234 17.4721 24.0234 17.3315C24.0234 17.2913 24.0301 17.2243 24.0435 17.1306L24.9074 12.1083L21.2511 8.55246C21.0837 8.37165 21 8.21094 21 8.07031C21 7.82254 21.1875 7.66853 21.5625 7.60826L26.6049 6.875L28.865 2.30469C28.9922 2.03013 29.1563 1.89286 29.3571 1.89286C29.558 1.89286 29.7221 2.03013 29.8493 2.30469L32.1094 6.875L37.1518 7.60826C37.5268 7.66853 37.7143 7.82254 37.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M58.7143 8.07031C58.7143 8.21763 58.6272 8.37835 58.4531 8.55246L54.8069 12.1083L55.6708 17.1306C55.6775 17.1775 55.6808 17.2444 55.6808 17.3315C55.6808 17.4721 55.644 17.5893 55.5703 17.683C55.5033 17.7835 55.4029 17.8337 55.269 17.8337C55.1417 17.8337 55.0078 17.7935 54.8672 17.7132L50.3571 15.3426L45.8471 17.7132C45.6998 17.7935 45.5658 17.8337 45.4453 17.8337C45.3047 17.8337 45.1975 17.7835 45.1239 17.683C45.0569 17.5893 45.0234 17.4721 45.0234 17.3315C45.0234 17.2913 45.0301 17.2243 45.0435 17.1306L45.9074 12.1083L42.2511 8.55246C42.0837 8.37165 42 8.21094 42 8.07031C42 7.82254 42.1875 7.66853 42.5625 7.60826L47.6049 6.875L49.865 2.30469C49.9922 2.03013 50.1563 1.89286 50.3571 1.89286C50.558 1.89286 50.7221 2.03013 50.8493 2.30469L53.1094 6.875L58.1518 7.60826C58.5268 7.66853 58.7143 7.82254 58.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M79.7143 8.07031C79.7143 8.21763 79.6272 8.37835 79.4531 8.55246L75.8069 12.1083L76.6708 17.1306C76.6775 17.1775 76.6808 17.2444 76.6808 17.3315C76.6808 17.4721 76.644 17.5893 76.5703 17.683C76.5033 17.7835 76.4029 17.8337 76.269 17.8337C76.1417 17.8337 76.0078 17.7935 75.8672 17.7132L71.3571 15.3426L66.8471 17.7132C66.6998 17.7935 66.5658 17.8337 66.4453 17.8337C66.3047 17.8337 66.1975 17.7835 66.1239 17.683C66.0569 17.5893 66.0234 17.4721 66.0234 17.3315C66.0234 17.2913 66.0301 17.2243 66.0435 17.1306L66.9074 12.1083L63.2511 8.55246C63.0837 8.37165 63 8.21094 63 8.07031C63 7.82254 63.1875 7.66853 63.5625 7.60826L68.6049 6.875L70.865 2.30469C70.9922 2.03013 71.1563 1.89286 71.3571 1.89286C71.558 1.89286 71.7221 2.03013 71.8493 2.30469L74.1094 6.875L79.1518 7.60826C79.5268 7.66853 79.7143 7.82254 79.7143 8.07031Z"
+                          fill="#344767" />
+                        <path
+                          d="M100.714 8.07031C100.714 8.21763 100.627 8.37835 100.453 8.55246L96.8069 12.1083L97.6708 17.1306C97.6775 17.1775 97.6808 17.2444 97.6808 17.3315C97.6808 17.4721 97.644 17.5893 97.5703 17.683C97.5033 17.7835 97.4029 17.8337 97.269 17.8337C97.1417 17.8337 97.0078 17.7935 96.8672 17.7132L92.3571 15.3426L87.8471 17.7132C87.6998 17.7935 87.5658 17.8337 87.4453 17.8337C87.3047 17.8337 87.1975 17.7835 87.1239 17.683C87.0569 17.5893 87.0234 17.4721 87.0234 17.3315C87.0234 17.2913 87.0301 17.2243 87.0435 17.1306L87.9074 12.1083L84.2511 8.55246C84.0837 8.37165 84 8.21094 84 8.07031C84 7.82254 84.1875 7.66853 84.5625 7.60826L89.6049 6.875L91.865 2.30469C91.9922 2.03013 92.1563 1.89286 92.3571 1.89286C92.558 1.89286 92.7221 2.03013 92.8493 2.30469L95.1094 6.875L100.152 7.60826C100.527 7.66853 100.714 7.82254 100.714 8.07031Z"
+                          fill="#344767" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_31_951">
+                          <rect width="101" height="18" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    <div class="author mt-4">
+                      <img src="../assets/img/team-5.jpg" alt="..." class="avatar rounded-circle shadow-lg" />
+                      <div class="ms-2">
+                        <span>Sarah Johnson</span>
+                        <div class="stats">
+                          <small class="opacity-6">Student Affairs Coordinator</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 ms-auto mt-5 mt-lg-0">
+              <div class="d-flex">
+                <div class="px-3 text-center border-start">
+                  <h1 class="text-gradient text-primary">10k+</h1>
+                  <h5 class="mt-3">Students</h5>
+                </div>
+                <div class="px-3 text-center border-start ms-5">
+                  <h1 class="text-gradient text-primary">3.8k+</h1>
+                  <h5 class="mt-3">Universities</h5>
+                </div>
+              </div>
+              <div class="d-flex mt-5">
+                <div class="px-3 text-center border-start">
+                  <h1 class="text-gradient text-primary">1.3M+</h1>
+                  <h5 class="mt-3">Page Visits</h5>
+                </div>
+                <div class="px-3 text-center border-start ms-5">
+                  <h1 class="text-gradient text-primary">2.7k+</h1>
+                  <h5 class="mt-3">Active Members</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="join">
+        <div class="container my-8">
+          <div class="row mb-5">
+            <div class="col-lg-6 mx-auto text-center">
+              <h2>Join Our Community</h2>
+              <p class="text-secondary lead font-weight-normal pe-3">
+                Find the creators and the people who are also using Smart Desk!!
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-6 ms-auto">
+              <div class="p-3">
+                <a href="https://github.com/rynixsnpsu/smartdesk
+              target=" _blank" class="icon icon-shape icon-md text-center bg-gradient-dark shadow-dark">
+                  <i class="bi bi-github opacity-10"></i>
+                </a>
+                <h5 class="mt-4">GitHub</h5>
+                <p>
+                  Get it free on Github and please help us spread the news with a
+                  Star.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="p-3">
+                <a href="https://discord.gg/eCkKUha8Wg" target="_blank"
+                  class="icon icon-shape icon-md text-center bg-gradient-dark shadow-dark">
+                  <i class="bi bi-discord opacity-10"></i>
+                </a>
+                <h5 class="mt-4">Discord</h5>
+                <p>For issues, feature requests and contribute.</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 me-auto">
+              <div class="p-3">
+                <a href="https://instagram.com/rynixofficial
+              target=" _blank" class="icon icon-shape icon-md text-center bg-gradient-dark shadow-dark">
+                  <i class="bi bi-instagram opacity-10"></i>
+                </a>
+                <h5 class="mt-4">Instagram</h5>
+                <p>For announcements, articles, and other resources.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <%- include('./partials/footer') %>
