@@ -28,9 +28,15 @@ exports.login = (req, res) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict"
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
   });
+
+  // If the client expects JSON (e.g., Next.js), return JSON instead of redirecting
+  const accept = String(req.headers.accept || "");
+  if (accept.includes("application/json") || req.path.startsWith("/api")) {
+    return res.json({ ok: true, role });
+  }
 
   res.redirect(`/${role}`);
 };

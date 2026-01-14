@@ -4,9 +4,8 @@ const { classifyCategory } = require("../ai/category");
 
 
 exports.dashboard = (req, res) => {
-  res.render("student", {
-    role: req.user
-  });
+  // Legacy EJS dashboard removed. Keep route for backward compatibility.
+  res.json({ ok: true, role: req.user?.role || null });
 };
 
 exports.submitFeedback = async (req, res) => {
@@ -41,5 +40,18 @@ exports.submitFeedback = async (req, res) => {
   } catch (err) {
     console.error("Student feedback error:", err);
     res.status(500).send("Failed to submit feedback");
+  }
+};
+
+exports.topTopicsJson = async (req, res) => {
+  try {
+    const topTopics = await Topic.find()
+      .sort({ votes: -1 })
+      .limit(5);
+
+    res.json({ topTopics });
+  } catch (err) {
+    console.error("Top topics error:", err);
+    res.status(500).json({ error: "Failed to load top topics" });
   }
 };

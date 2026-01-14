@@ -8,9 +8,15 @@ router.post("/login", loginLimiter, authController.login);
 router.get("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict"
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
   });
+
+  const accept = String(req.headers.accept || "");
+  if (accept.includes("application/json") || req.path.startsWith("/api")) {
+    return res.json({ ok: true });
+  }
+
   res.redirect("/login");
 });
 

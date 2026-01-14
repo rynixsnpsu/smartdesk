@@ -19,4 +19,10 @@ router.post(
   studentController.submitFeedback
 );
 
+router.get(
+  "/api/student/top-topics",
+  protect("student"),
+  studentController.topTopicsJson
+);
+
 module.exports = router;

@@ -10,38 +10,43 @@ const studentRoutes = require("./routes/student.routes");
 const adminRoutes = require("./routes/admin.routes");
 const newsletterRoutes = require("./routes/newsletter.routes");
 
+function corsForClient(req, res, next) {
+  const origin = req.headers.origin;
+  const allowed = process.env.CLIENT_ORIGIN || "http://localhost:3000";
+  if (origin && origin === allowed) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, Accept"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    );
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+}
 
 const app = express();
-app.use((req, res, next) => {
-  res.locals.user = req.user || null;
-  next();
-});
 
 /* Core middleware */
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(corsForClient);
 app.use(securityMiddleware);
 app.use(express.static(path.join(__dirname, "public")));
 
-/* Views */
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
-/* Routes */
-app.get("/", (req, res) => res.render("landing", { showNavbar: true }));
-app.get("/login", (req, res) =>
-  res.render("login", {
-    layout: "layouts/main",
-    title: "Smart Desk",
-    showNavbar: false,
-  })
-);
-
+/* Routes (API + auth) */
 app.use(authRoutes);
 app.use(studentRoutes);
 app.use(adminRoutes);
 app.use(newsletterRoutes);
+
+app.get("/health", (req, res) => res.json({ ok: true }));
 
 
 /* Error handling */
