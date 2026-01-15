@@ -4,7 +4,7 @@
 
 AI-Powered Student Feedback Intelligence Platform evolved into a comprehensive university management system.
 
-Made with 💚 by [rynixofficial](https://github.com/rynixofficial)
+Made with 💚 by [rynixofficial](https://github.com/rynixsnpsu)
 
 ## 🚀 Features
 
@@ -48,13 +48,13 @@ Made with 💚 by [rynixofficial](https://github.com/rynixofficial)
 - ✅ **Security**: Rate limiting, CORS, input validation, audit logging
 - ✅ **Sample Data**: Default users and announcements available after seeding
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 20+
 - MongoDB (local or cloud)
 - Ollama (optional, for AI features)
 
-## 🛠️ Installation
+## Installation
 
 ### Backend Setup
 
@@ -89,7 +89,7 @@ npm install
 npm run dev
 ```
 
-## 👤 Default Users
+## Default Users
 
 After running `npm run seed`:
 
@@ -101,7 +101,7 @@ After running `npm run seed`:
 - **Academic Manager**: `academic_manager` / `academic123`
 - **Faculty**: `faculty` / `faculty123`
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 smartdesk2/
@@ -123,7 +123,7 @@ smartdesk2/
 └── package.json
 ```
 
-## 🔐 API Endpoints
+## API Endpoints
 
 ### Authentication
 - `POST /login` - User login
@@ -176,14 +176,14 @@ smartdesk2/
 - `PUT /api/topics/:id` - Update topic
 - `DELETE /api/topics/:id` - Delete topic
 
-## 🎨 Tech Stack
+## Tech Stack
 
 - **Backend**: Node.js, Express, MongoDB, Mongoose
 - **Frontend**: Next.js, React, Tailwind CSS
 - **AI**: Ollama (local Gemma model)
 - **Auth**: JWT (HTTP-only cookies)
 
-## 🚢 Production Deployment
+## Production Deployment
 
 1. Set `NODE_ENV=production` in `.env`
 2. Use secure `JWT_SECRET`
@@ -192,15 +192,15 @@ smartdesk2/
 5. Build frontend: `cd client && npm run build && npm start`
 6. Start backend: `npm start`
 
-## 📝 License
+## License
 
 MIT
 
-## 👨‍💻 Author
+##  Author
 
 **rynixofficial**
 
-- GitHub: [@rynixofficial](https://github.com/rynixofficial)
+- GitHub: [@rynixsnpsu](https://github.com/rynixsnpsu)
 
 ---
 
