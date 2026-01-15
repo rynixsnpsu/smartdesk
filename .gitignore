@@ -7,3 +7,7 @@ npm-debug.log*
 logs/
 *.log
 *.gguf
+.next/
+client/.next/
+*.hot-update.js
+*.hot-update.json

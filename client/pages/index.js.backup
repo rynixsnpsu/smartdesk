@@ -1,0 +1,935 @@
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      // In a real app, this would send to a backend endpoint
+      // For now, we'll simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setSubmitMessage('Thank you for your message! We\'ll get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      setSubmitMessage('Sorry, there was an error sending your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          style={{
+            width: '100%',
+            padding: '1rem',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '10px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            fontSize: '1rem',
+            marginBottom: '1rem',
+            outline: 'none'
+          }}
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          style={{
+            width: '100%',
+            padding: '1rem',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '10px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            fontSize: '1rem',
+            marginBottom: '1rem',
+            outline: 'none'
+          }}
+        />
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={formData.subject}
+          onChange={handleChange}
+          required
+          style={{
+            width: '100%',
+            padding: '1rem',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '10px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            fontSize: '1rem',
+            marginBottom: '1rem',
+            outline: 'none'
+          }}
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={formData.message}
+          onChange={handleChange}
+          required
+          rows={5}
+          style={{
+            width: '100%',
+            padding: '1rem',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '10px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            fontSize: '1rem',
+            resize: 'vertical',
+            outline: 'none'
+          }}
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        style={{
+          width: '100%',
+          padding: '1rem',
+          background: isSubmitting ? 'rgba(255, 255, 255, 0.3)' : '#fff',
+          color: '#7B4CFF',
+          border: 'none',
+          borderRadius: '10px',
+          fontWeight: '600',
+          fontSize: '1.1rem',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
+          transition: 'transform 0.2s'
+        }}
+        onMouseOver={(e) => !isSubmitting && (e.target.style.transform = 'translateY(-2px)')}
+        onMouseOut={(e) => !isSubmitting && (e.target.style.transform = 'translateY(0)')}
+      >
+        {isSubmitting ? 'Sending...' : 'Send Message'}
+      </button>
+
+      {submitMessage && (
+        <div style={{
+          marginTop: '1rem',
+          padding: '1rem',
+          background: submitMessage.includes('Thank you') ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)',
+          border: `1px solid ${submitMessage.includes('Thank you') ? 'rgba(0, 255, 0, 0.3)' : 'rgba(255, 0, 0, 0.3)'}`,
+          borderRadius: '10px',
+          color: '#fff',
+          textAlign: 'center'
+        }}>
+          {submitMessage}
+        </div>
+      )}
+    </form>
+  );
+}
+
+export default function LandingPage() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const [stats, setStats] = useState({
+    totalTopics: 0,
+    totalVotes: 0,
+    activeUsers: 0
+  });
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+  useEffect(() => {
+    checkAuthStatus();
+    fetchStats();
+
+    // Add scroll listener for scroll-to-top button
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/analytics`, {
+        credentials: 'include'
+      });
+      if (response.ok) {
+        setIsLoggedIn(true);
+        // Try to determine role from current path or cookies
+        const path = window.location.pathname;
+        if (path.includes('/admin')) setUserRole('admin');
+        else if (path.includes('/student')) setUserRole('student');
+      }
+    } catch (error) {
+      // Not logged in
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      setIsLoadingStats(true);
+      const response = await fetch(`${API_BASE}/api/admin/analytics`);
+      if (response.ok) {
+        const data = await response.json();
+        setStats({
+          totalTopics: data.totalSubmissions || 0,
+          totalVotes: data.weeklyTrends?.reduce((sum, day) => sum + (day.count || 0), 0) || 0,
+          activeUsers: data.categoryDistribution?.length || 0
+        });
+      }
+    } catch (error) {
+      // Use default stats
+      console.log('Could not fetch stats, using defaults');
+    } finally {
+      setIsLoadingStats(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_BASE}/logout`, { method: 'POST', credentials: 'include' });
+      setIsLoggedIn(false);
+      setUserRole(null);
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+      {/* Navigation */}
+      <nav style={{
+        padding: '1rem 2rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: '#fff',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 'bold',
+            color: '#7B4CFF'
+          }}>
+            S
+          </div>
+          <div>
+            <h2 style={{ margin: 0, color: '#fff', fontSize: '1.2rem' }}>SmartDesk</h2>
+            <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>by rynixofficial</small>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {isLoggedIn ? (
+            <>
+              <span style={{ color: '#fff', fontSize: '0.9rem' }}>
+                Welcome back ({userRole})
+              </span>
+              <button
+                onClick={() => router.push(`/${userRole}`)}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => scrollToSection('features')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  color: '#fff',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  borderRadius: '20px',
+                  transition: 'background 0.3s'
+                }}
+                onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.1)'}
+                onMouseOut={(e) => e.target.style.background = 'transparent'}
+              >
+                Features
+              </button>
+              <button
+                onClick={() => scrollToSection('contact')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  color: '#fff',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  borderRadius: '20px',
+                  transition: 'background 0.3s'
+                }}
+                onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.1)'}
+                onMouseOut={(e) => e.target.style.background = 'transparent'}
+              >
+                Contact
+              </button>
+              <a
+                href="/login"
+                style={{
+                  padding: '0.5rem 1rem',
+                  color: '#fff',
+                  textDecoration: 'none',
+                  borderRadius: '20px',
+                  fontSize: '0.9rem',
+                  transition: 'background 0.3s'
+                }}
+                onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.1)'}
+                onMouseOut={(e) => e.target.style.background = 'transparent'}
+              >
+                Login
+              </a>
+              <a
+                href="/admin"
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: '#fff',
+                  textDecoration: 'none',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '20px',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Admin Demo
+              </a>
+            </>
+          )}
+        </div>
+      </nav>
+
+      <main style={{ padding: "3rem 2rem", maxWidth: 1200, margin: "0 auto", color: '#fff' }}>
+        {/* Hero Section */}
+        <section style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <h1 style={{
+            fontSize: "3.5rem",
+            marginBottom: "1rem",
+            background: 'linear-gradient(45deg, #fff, #e0e7ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            SmartDesk
+          </h1>
+          <p style={{
+            fontSize: "1.3rem",
+            marginBottom: "2rem",
+            color: 'rgba(255, 255, 255, 0.9)',
+            maxWidth: '600px',
+            margin: '0 auto 2rem'
+          }}>
+            AI-powered student feedback intelligence platform for modern universities.
+            Transform student voices into actionable insights with advanced AI clustering.
+          </p>
+
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => router.push('/login')}
+              style={{
+                padding: "1rem 2rem",
+                background: "#fff",
+                color: "#7B4CFF",
+                border: "none",
+                borderRadius: 50,
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                cursor: "pointer",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                transition: "transform 0.2s"
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+              onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              🚀 Get Started
+            </button>
+            <button
+              onClick={() => router.push('/admin')}
+              style={{
+                padding: "1rem 2rem",
+                background: "transparent",
+                color: "#fff",
+                border: "2px solid rgba(255, 255, 255, 0.3)",
+                borderRadius: 50,
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                cursor: "pointer",
+                transition: "all 0.3s"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.borderColor = '#fff';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              }}
+            >
+              📊 View Analytics
+            </button>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '2rem',
+          marginBottom: '4rem',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            padding: '2rem',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              {isLoadingStats ? '...' : `${stats.totalTopics}+`}
+            </div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Topics Submitted</div>
+          </div>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            padding: '2rem',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              {isLoadingStats ? '...' : `${stats.totalVotes}+`}
+            </div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Student Votes</div>
+          </div>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            padding: '2rem',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              {isLoadingStats ? '...' : `${stats.activeUsers}+`}
+            </div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Active Categories</div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" style={{ marginBottom: '4rem' }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '2.5rem',
+            marginBottom: '3rem',
+            color: '#fff'
+          }}>
+            Powerful Features
+          </h2>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '2rem'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤖</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>AI Topic Intelligence</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Automatically cluster feedback into meaningful themes like Academics, Faculty,
+                Infrastructure, Hostel, and Administration using advanced AI algorithms.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Admin Analytics Dashboard</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Get comprehensive insights with category distributions, weekly trends,
+                top topics, and severity analysis all in one powerful dashboard.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👥</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>User Management</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Complete user management system with role-based access control.
+                Admins can add, remove, and manage students and other administrators.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎯</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Topic Management</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Full CRUD operations for topics. Admins can create, edit, delete,
+                and organize feedback topics with voting and categorization.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Secure Authentication</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                JWT-based authentication with HTTP-only cookies for maximum security.
+                Role-based access control ensures proper data protection.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'transform 0.3s'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚀</div>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Production Ready</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Docker containerization, environment configuration, and deployment
+                scripts make it easy to deploy to any cloud platform.
+              </p>
+            </div>
+          </div>
+        {/* Testimonials Section */}
+        <section style={{ marginBottom: '4rem' }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '2.5rem',
+            marginBottom: '3rem',
+            color: '#fff'
+          }}>
+            What Universities Say
+          </h2>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '2rem'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎓</div>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '1.1rem',
+                fontStyle: 'italic',
+                marginBottom: '1rem',
+                lineHeight: '1.6'
+              }}>
+                "SmartDesk has revolutionized how we collect and analyze student feedback.
+                The AI clustering saves us hours of manual categorization."
+              </p>
+              <div style={{ fontWeight: 'bold', color: '#fff' }}>Dr. Sarah Johnson</div>
+              <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.9rem' }}>
+                Dean of Student Affairs, Tech University
+              </div>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📈</div>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '1.1rem',
+                fontStyle: 'italic',
+                marginBottom: '1rem',
+                lineHeight: '1.6'
+              }}>
+                "The analytics dashboard gives us real-time insights into student concerns.
+                We've been able to address issues before they become major problems."
+              </p>
+              <div style={{ fontWeight: 'bold', color: '#fff' }}>Prof. Michael Chen</div>
+              <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.9rem' }}>
+                IT Director, Global University
+              </div>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👥</div>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '1.1rem',
+                fontStyle: 'italic',
+                marginBottom: '1rem',
+                lineHeight: '1.6'
+              }}>
+                "Students love how easy it is to submit feedback. The user management
+                features make it simple to maintain our community."
+              </p>
+              <div style={{ fontWeight: 'bold', color: '#fff' }}>Dr. Emily Rodriguez</div>
+              <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.9rem' }}>
+                Student Services Coordinator, Innovation College
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section style={{ marginBottom: '4rem' }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '2.5rem',
+            marginBottom: '3rem',
+            color: '#fff'
+          }}>
+            Frequently Asked Questions
+          </h2>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+            gap: '2rem'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>How does the AI clustering work?</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Our AI analyzes student feedback and automatically categorizes it into themes like
+                Academics, Faculty, Infrastructure, etc. It uses semantic understanding to group
+                similar topics together.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Is my data secure?</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Yes! We use JWT authentication with HTTP-only cookies and encrypt all sensitive data.
+                Student feedback is stored securely and only accessible to authorized administrators.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Can I export the data?</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Absolutely! The admin dashboard provides comprehensive analytics that can be
+                exported for further analysis or reporting to university leadership.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>How do I get started?</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                Simply sign up for an admin account, invite your students, and start collecting
+                feedback. The AI will automatically begin clustering and analyzing responses.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section style={{
+          textAlign: 'center',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          padding: '3rem',
+          borderRadius: '20px',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          marginBottom: '2rem'
+        }}>
+          <h2 style={{ color: '#fff', marginBottom: '1rem' }}>
+            Ready to Transform Student Feedback?
+          </h2>
+          <p style={{
+            color: 'rgba(255, 255, 255, 0.8)',
+            marginBottom: '2rem',
+            fontSize: '1.1rem'
+          }}>
+            Join universities worldwide using SmartDesk to understand and act on student voices.
+          </p>
+          <button
+            onClick={() => router.push('/login')}
+            style={{
+              padding: "1rem 2rem",
+              background: "#fff",
+              color: "#7B4CFF",
+              border: "none",
+              borderRadius: 50,
+              fontWeight: 600,
+              fontSize: "1.1rem",
+              cursor: "pointer",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+              transition: "transform 0.2s"
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+          >
+            Start Your SmartDesk Journey
+          </button>
+        {/* Contact Section */}
+        <section id="contact" style={{ marginBottom: '4rem' }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '2.5rem',
+            marginBottom: '3rem',
+            color: '#fff'
+          }}>
+            Get In Touch
+          </h2>
+
+          <div style={{
+            maxWidth: '600px',
+            margin: '0 auto',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            padding: '3rem',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
+            <ContactForm />
+          </div>
+        </section>
+      <footer style={{
+        background: 'rgba(0, 0, 0, 0.2)',
+        padding: '2rem',
+        textAlign: 'center',
+        color: 'rgba(255, 255, 255, 0.8)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <div style={{
+              width: '30px',
+              height: '30px',
+              background: '#fff',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              color: '#7B4CFF',
+              fontSize: '0.8rem'
+            }}>
+              S
+            </div>
+            <span style={{ fontWeight: 'bold', color: '#fff' }}>SmartDesk</span>
+          </div>
+          <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+            Built with ❤️ by <a href="https://github.com/rynixofficial" style={{ color: '#fff', textDecoration: 'underline' }}>rynixofficial</a>
+          </p>
+          <p style={{ margin: '0.5rem 0', fontSize: '0.8rem' }}>
+            © 2025 SmartDesk. All rights reserved.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+            <a href="https://github.com/rynixofficial/smartdesk" style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none' }}>
+              GitHub
+            </a>
+            <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
+            <a href="mailto:contact@smartdesk.com" style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none' }}>
+              Contact
+            </a>
+            <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
+            <a href="/admin" style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none' }}>
+              Admin Demo
+            </a>
+          </div>
+        </div>
+      </footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          style={{
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: '#7B4CFF',
+            color: '#fff',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem',
+            zIndex: 1000,
+            transition: 'transform 0.2s'
+          }}
+          onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
+          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+        >
+          ↑
+        </button>
+      )}
+    </div>
+  );
+}
+

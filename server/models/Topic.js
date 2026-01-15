@@ -5,7 +5,8 @@ const topicSchema = new mongoose.Schema(
     topic: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      index: true
     },
     description: {
       type: String,
@@ -13,7 +14,8 @@ const topicSchema = new mongoose.Schema(
     },
     votes: {
       type: Number,
-      default: 1
+      default: 1,
+      min: 0
     },
     category: {
       type: String,
@@ -25,10 +27,25 @@ const topicSchema = new mongoose.Schema(
         "Administration",
         "Other"
       ],
-      default: "Other"
+      default: "Other",
+      index: true
+    },
+    status: {
+      type: String,
+      enum: ["open", "in-progress", "resolved", "closed"],
+      default: "open",
+      index: true
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true
     }
   },
   { timestamps: true }
 );
+
+// Index for search
+topicSchema.index({ topic: "text", description: "text" });
 
 module.exports = mongoose.model("Topic", topicSchema);

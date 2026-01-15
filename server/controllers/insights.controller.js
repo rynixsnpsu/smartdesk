@@ -1,4 +1,4 @@
-const Topic = require("../data/topic.model");
+const Topic = require("../models/Topic");
 const { groupIntoThemes, computeSeverity } = require("../ai/themeCluster");
 const { callOllama } = require("../ai/ollama");
 
@@ -13,21 +13,18 @@ function makeDeterministicSummary({ totalSubmissions, topTopics, themes }) {
 }
 
 async function tryOllamaSummary(payload) {
-  // Optional, should never be required for dashboard functionality
   if (process.env.ENABLE_OLLAMA_SUMMARY !== "1") return null;
 
   const prompt = [
     "You are an analytics assistant for a university feedback platform.",
     "Summarize the key insights in 4-6 bullet points. Be concrete and action-oriented.",
     "Data (JSON):",
-    JSON.stringify(payload).slice(0, 8000),
+    JSON.stringify(payload).slice(0, 8000)
   ].join("\n");
 
-  // Hard timeout so the endpoint stays fast for demos
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), 3000);
   try {
-    // callOllama currently doesn't accept a signal; keep it best-effort
     const out = await callOllama(prompt);
     return out;
   } catch {
@@ -37,7 +34,7 @@ async function tryOllamaSummary(payload) {
   }
 }
 
-exports.insightsJson = async (req, res) => {
+exports.getInsights = async (req, res) => {
   try {
     const selectedCategory =
       typeof req.query.category === "string" && req.query.category.trim()
@@ -51,7 +48,8 @@ exports.insightsJson = async (req, res) => {
 
     const topTopics = await Topic.find(matchFilter)
       .sort({ votes: -1 })
-      .limit(10);
+      .limit(10)
+      .populate("createdBy", "username email");
 
     const topicsForThemes = await Topic.find(matchFilter).limit(500);
     const themes = await groupIntoThemes(topicsForThemes);
@@ -63,7 +61,7 @@ exports.insightsJson = async (req, res) => {
         category: t.category,
         votes: t.votes,
         createdAt: t.createdAt,
-        severity: computeSeverity(t),
+        severity: computeSeverity(t)
       }))
       .sort((a, b) => b.severity - a.severity || b.votes - a.votes)
       .slice(0, 10);
@@ -76,19 +74,22 @@ exports.insightsJson = async (req, res) => {
         topic: t.topic,
         category: t.category,
         votes: t.votes,
-        createdAt: t.createdAt,
+        createdAt: t.createdAt
       })),
       themes: themes.slice(0, 10),
-      severityLeaderboard,
+      severityLeaderboard
     };
 
     const aiSummary = await tryOllamaSummary(payload);
     const summary = aiSummary || makeDeterministicSummary(payload);
 
-    res.json({ ...payload, summary, summarySource: aiSummary ? "ollama" : "deterministic" });
+    res.json({
+      ...payload,
+      summary,
+      summarySource: aiSummary ? "ollama" : "deterministic"
+    });
   } catch (err) {
     console.error("Insights error:", err);
     res.status(500).json({ error: "Failed to load insights" });
   }
 };
-

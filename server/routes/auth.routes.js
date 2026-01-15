@@ -1,23 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const { loginLimiter } = require("../middleware/rateLimit.middleware");
+const { rateLimit, securityHeaders, optionalAuth, protect } = require("../middleware/auth.middleware");
 const authController = require("../controllers/auth.controller");
 
-router.post("/login", loginLimiter, authController.login);
+// Apply security headers
+router.use(securityHeaders);
 
-router.get("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
-  });
+// Login route with rate limiting
+router.post("/login", rateLimit, authController.login);
 
-  const accept = String(req.headers.accept || "");
-  if (accept.includes("application/json") || req.path.startsWith("/api")) {
-    return res.json({ ok: true });
-  }
+// Logout route
+router.get("/logout", optionalAuth, authController.logout);
+router.post("/logout", optionalAuth, authController.logout);
 
-  res.redirect("/login");
-});
+// Get current user (requires authentication)
+router.get("/api/auth/me", protect(), authController.getMe);
+
+// Change password (requires authentication)
+router.post("/api/auth/change-password", protect(), authController.changePassword);
+
+// Refresh token
+router.post("/api/auth/refresh", authController.refreshToken);
 
 module.exports = router;

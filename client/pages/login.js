@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,19 +19,24 @@ export default function LoginPage() {
       const res = await fetch(`${API_BASE}/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Accept: "application/json"
         },
         credentials: "include",
         body: JSON.stringify({ identifier, password })
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Login failed");
+        const data = await res.json();
+        throw new Error(data.error || "Login failed");
       }
 
-      // Backend should redirect based on role; here we optimistically try both dashboards
-      window.location.href = "/student";
+      const data = await res.json();
+      if (data.success && data.user) {
+        router.push(`/${data.user.role}`);
+      } else {
+        throw new Error("Login failed");
+      }
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {
@@ -37,71 +45,68 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{ padding: "3rem 1.5rem", display: "flex", justifyContent: "center" }}>
-      <div
-        style={{
-          maxWidth: 400,
-          width: "100%",
-          background: "#fff",
-          padding: "2rem",
-          borderRadius: 16,
-          boxShadow: "0 18px 45px rgba(15,23,42,0.12)"
-        }}
-      >
-        <h2 style={{ marginBottom: "1.5rem", textAlign: "center" }}>Login to Smart Desk</h2>
-        <form onSubmit={handleSubmit}>
-          <label style={{ display: "block", fontSize: 14, marginBottom: 4 }}>Roll No / Username</label>
-          <input
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.8rem",
-              borderRadius: 8,
-              border: "1px solid #d1d5db",
-              marginBottom: "0.75rem"
-            }}
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
-          <label style={{ display: "block", fontSize: 14, marginBottom: 4 }}>Password</label>
-          <input
-            type="password"
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.8rem",
-              borderRadius: 8,
-              border: "1px solid #d1d5db",
-              marginBottom: "1rem"
-            }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && (
-            <p style={{ color: "#b91c1c", fontSize: 13, marginBottom: "0.75rem" }}>
-              {error}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "0.7rem 1rem",
-              borderRadius: 999,
-              border: "none",
-              background: "#7B4CFF",
-              color: "#fff",
-              fontWeight: 600,
-              cursor: "pointer",
-              opacity: loading ? 0.7 : 1
-            }}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+    <>
+      <Head>
+        <title>Login - SmartDesk</title>
+      </Head>
+      <div className="min-h-screen bg-dark bg-grid flex items-center justify-center p-6">
+        <div className="neon-card p-8 rounded-lg w-full max-w-md slide-in">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gradient-neon neon-glow mb-2">
+              SmartDesk
+            </h1>
+            <p className="text-gray-400">AI-Powered Feedback Intelligence</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Username / Email
+              </label>
+              <input
+                type="text"
+                className="input-neon w-full rounded"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="Enter your username or email"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                className="input-neon w-full rounded"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="p-3 bg-red-900/30 border border-red-500/50 rounded text-red-300 text-sm">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-neon btn-neon-primary w-full py-3 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-gray-400">
+            <p>Made with 💚 by rynixofficial</p>
+          </div>
+        </div>
       </div>
-    </main>
+    </>
   );
 }
-
